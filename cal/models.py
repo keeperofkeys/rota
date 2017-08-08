@@ -7,6 +7,8 @@ class TimeChunk(models.Model):
     end_time = models.DateTimeField()
     user = models.ForeignKey(User)
     text = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    last_changed = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         if self.text:
