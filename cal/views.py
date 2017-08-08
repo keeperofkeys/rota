@@ -13,6 +13,8 @@ def cal(request, month, year):
     end = datetime.datetime(year=year+month//12, month=(month%12)+1, day=1) - datetime.timedelta(seconds=1)
     chunks = TimeChunk.objects.filter(start_time__gte=start, end_time__lte=end)
     start_day, no_of_days = calendar.monthrange(year, month)
+    prevmonth = (month - 1, year) if month > 1 else (12, year - 1)
+    nextmonth = (month + 1, year) if month < 12 else (1, year + 1)
 
     cells = [{'cls': 'blank', 'date': 0} for i in range(start_day + 1)]
 
@@ -27,5 +29,10 @@ def cal(request, month, year):
 
     return render(request, 'calendar.html', {
         'chunks': chunks,
-        'cells': cells
+        'cells': cells,
+        'month': month,
+        'year': year,
+        'monthname': start.strftime("%B"),
+        'prev': prevmonth,
+        'next': nextmonth
     })

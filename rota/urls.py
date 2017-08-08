@@ -21,6 +21,6 @@ from cal import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html')),
-    url(r'^calendar/(?P<month>\d+)/(?P<year>\d+)', views.cal)
+    url(r'^calendar/(?P<month>\d+)/(?P<year>\d+)', views.cal, name='week')
 ]
 
