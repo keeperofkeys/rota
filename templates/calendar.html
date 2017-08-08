@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<table>
+    <tr class="head">
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thur</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        <th>Sun</th>
+{% for cell in cells %}
+    {% if forloop.counter0|divisibleby:7 %}
+    </tr>
+    <tr class="dates">
+    {% endif %}
+        <td class="{{ cell.cls }}">
+            {% if cell.date %}
+            <span class="date">{{ cell.date }}</span>
+            {% endif %}
+        </td>
+{% endfor %}
+    </tr>
+
+</table>
+
+{% endblock %}
