@@ -4,6 +4,10 @@
 
 <h2>{{ monthname }} {{ year }}</h2>
 
+<script>
+    DATA = {};
+</script>
+
 <table>
     <tr class="head">
         <th>Mon</th>
@@ -13,16 +17,32 @@
         <th>Fri</th>
         <th>Sat</th>
         <th>Sun</th>
-    {% for cell in cells %}
+    {% for day in days %}
         {% if forloop.counter0|divisibleby:7 %}
     </tr>
     <tr class="dates">
         {% endif %}
-        <td class="{{ cell.cls }}">
-            {% if cell.date %}
-            <span class="date">{{ cell.date }}</span>
-            {% endif %}
+        {% if day %}
+        <td class="c-{{ day.date }}">
+            <span class="date">{{ day.date }}</span>
+            <script>
+                DATA[{{ day.date }}] = [
+                {% for chunk in day.chunks %}
+                    {
+                        id: {{ chunk.id }},
+                        startTime: new Date("{{ chunk.start_time|date:'Y/m/d H:m' }}"),
+                        endTime: new Date("{{ chunk.end_time|date:'Y/m/d H:m' }}"),
+                        user: "{{ chunk.user.first_name }}",
+                        text: "{{ chunk.text }}"
+                    }
+                {% endfor %}
+                ];
+            </script>
         </td>
+        {% else %}
+        <td class="blank">
+        </td>
+        {% endif %}
     {% endfor %}
     </tr>
 
