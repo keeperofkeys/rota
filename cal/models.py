@@ -12,5 +12,5 @@ class TimeChunk(models.Model):
         if self.text:
             return self.text
         else:
-            #return '%s time chunk starting at %t' % self.user.first_name, self.start_time
             return "{} time chunk starting {:%h %d, %Y} at {:%H:%M}".format(self.user.first_name, self.start_time, self.start_time)
+
