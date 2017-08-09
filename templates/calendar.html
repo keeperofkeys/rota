@@ -5,7 +5,21 @@
 <h2>{{ monthname }} {{ year }}</h2>
 
 <script>
-    DATA = {};
+    DATA = [];
+    CONTROLLERS = [];
+    function DayController(date) {
+        this.date = date;
+        this.chunks = DATA[this.date];
+        this.$cell = $('#c-'+this.date);
+    }
+    DayController.prototype.render = function() {
+        for (var j=0; j<this.chunks.length; j++) {
+            var chunk = this.chunks[j];
+            this.$cell.append(chunk.user);
+            this.$cell.append(chunk.text);
+        }
+    };
+
 </script>
 
 <table>
@@ -23,20 +37,23 @@
     <tr class="dates">
         {% endif %}
         {% if day %}
-        <td class="c-{{ day.date }}">
+        <td id="c-{{ day.date }}">
             <span class="date">{{ day.date }}</span>
             <script>
-                DATA[{{ day.date }}] = [
+                DATA[Number({{ day.date }})] = [
                 {% for chunk in day.chunks %}
                     {
                         id: {{ chunk.id }},
                         startTime: new Date("{{ chunk.start_time|date:'Y/m/d H:m' }}"),
                         endTime: new Date("{{ chunk.end_time|date:'Y/m/d H:m' }}"),
                         user: "{{ chunk.user.first_name }}",
-                        text: "{{ chunk.text }}"
+                        text: "{{ chunk.text }}",
+                        created: new Date("{{ chunk.created|date:'Y/m/d H:m' }}"),
+                        lastChanged: new Date("{{ chunk.last_changed|date:'Y/m/d H:m' }}")
                     }
                 {% endfor %}
                 ];
+                CONTROLLERS[Number({{ day.date }})] = new DayController(Number({{ day.date }}));
             </script>
         </td>
         {% else %}
@@ -48,6 +65,13 @@
 
 </table>
 
-<nav><a href="{% url 'week' prev.0 prev.1 %}">&lt;prev</a> | <a href="{% url 'week' next.0 next.1 %}">next&gt;</a></nav>
+<nav><a href="{% url 'month' prev.0 prev.1 %}">&lt;prev</a> | <a href="{% url 'month' next.0 next.1 %}">next&gt;</a></nav>
+
+<script>
+    for (var j=1; j<CONTROLLERS.length + 1; j++) {
+        CONTROLLERS[j].render();
+    }
+</script>
+
 
 {% endblock %}
