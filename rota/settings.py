@@ -72,10 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rota.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/dev/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -117,8 +113,13 @@ USE_L10N = True
 USE_TZ = True
 
 
+LOGIN_URL = '/login'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_URL = '/login'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/Volumes/LocalDataHD/cjo20/dev/rota/static/',
+]

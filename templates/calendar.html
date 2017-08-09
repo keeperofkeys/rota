@@ -1,26 +1,10 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block body %}
 
 <h2>{{ monthname }} {{ year }}</h2>
 
-<script>
-    DATA = [];
-    CONTROLLERS = [];
-    function DayController(date) {
-        this.date = date;
-        this.chunks = DATA[this.date];
-        this.$cell = $('#c-'+this.date);
-    }
-    DayController.prototype.render = function() {
-        for (var j=0; j<this.chunks.length; j++) {
-            var chunk = this.chunks[j];
-            this.$cell.append(chunk.user);
-            this.$cell.append(chunk.text);
-        }
-    };
-
-</script>
+<script src="{% static 'cal/framework.js' %}"></script>
 
 <table>
     <tr class="head">
@@ -68,8 +52,8 @@
 <nav><a href="{% url 'month' prev.0 prev.1 %}">&lt;prev</a> | <a href="{% url 'month' next.0 next.1 %}">next&gt;</a></nav>
 
 <script>
-    for (var j=1; j<CONTROLLERS.length + 1; j++) {
-        CONTROLLERS[j].render();
+    for (var index in CONTROLLERS) {
+        CONTROLLERS[index].render();
     }
 </script>
 
