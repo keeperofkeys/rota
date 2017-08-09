@@ -33,7 +33,8 @@
                         user: "{{ chunk.user.first_name }}",
                         text: "{{ chunk.text }}",
                         created: new Date("{{ chunk.created|date:'Y/m/d H:m' }}"),
-                        lastChanged: new Date("{{ chunk.last_changed|date:'Y/m/d H:m' }}")
+                        lastChanged: new Date("{{ chunk.last_changed|date:'Y/m/d H:m' }}"),
+                        availability: "{{ chunk.availability }}"
                     }
                 {% endfor %}
                 ];
