@@ -1,36 +1,22 @@
 import datetime
 import calendar
 #from django.utils import timezone
-from django.db.models import Q
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from cal.models import TimeChunk
+from cal.utils import pertinent_chunks, Day, ONE_SECOND, ONE_DAY
 
-
-ONE_DAY = datetime.timedelta(days=1)
-ONE_SECOND = datetime.timedelta(seconds=1)
-
-class Day:
-    def __init__(self, day, month, year):
-        self.date, self.month, self.year = day, month, year
-        self.start = datetime.datetime(year=year, month=month, day=day)
-        self.end = self.start + ONE_DAY - ONE_SECOND
-
-    def chunks(self):
-        return TimeChunk.objects.filter(
-            (Q(start_time__gte=self.start) & Q(start_time__lte=self.end))
-            | (Q(end_time__gte=self.start) & Q(end_time__lte=self.end))
-            | (Q(start_time__lte=self.start) & Q(end_time__gte=self.end))
-        )
 
 @login_required(login_url='/login/')
 def month_view(request, month, year):
     year = int(year)
     month = int(month)
-    start = datetime.datetime(year=year, month=month, day=1)
     start_day, no_of_days = calendar.monthrange(year, month)
     prevmonth = (month - 1, year) if month > 1 else (12, year - 1)
     nextmonth = (month + 1, year) if month < 12 else (1, year + 1)
+    start = datetime.datetime(year=year, month=month, day=1)
+    end = datetime.datetime(year=nextmonth[1], month=nextmonth[0], day=1) - ONE_SECOND
+    chunks = pertinent_chunks(start, end)
 
     days = [None for i in range(start_day)]
 
@@ -47,7 +33,8 @@ def month_view(request, month, year):
         'year': year,
         'monthname': start.strftime("%B"),
         'prev': prevmonth,
-        'next': nextmonth
+        'next': nextmonth,
+        'chunks': chunks
     })
 
 
